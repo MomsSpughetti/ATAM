@@ -1,0 +1,1 @@
+python3 py_tests_ex_1_1.py ex1test ex1.asm run_test.sh true
