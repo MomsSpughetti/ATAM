@@ -1,0 +1,32 @@
+.global _start
+
+.section .text
+  n_l:
+  movzbq result, %rax
+  cmpb $2, %al
+  jne bad_exit
+
+  movq $60, %rax
+  movq $0, %rdi
+  syscall
+
+bad_exit:
+  movq $60, %rax
+  movq $1, %rdi
+  syscall
+
+.section .data
+result: .byte 0
+
+
+.section .data
+
+D: 	.quad 19
+	.quad 0
+C: 	.quad 19
+	.quad D
+B: 	.quad 5
+	.quad C
+A: 	.quad 1
+	.quad B
+head: .quad A
