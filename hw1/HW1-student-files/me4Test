@@ -22,9 +22,9 @@ result: .byte 0
 .section .data
 
 
-A:  .quad 1
+A:  .quad 20
     .quad B
-B:  .quad 10
+B:  .quad 1
     .quad C
 C:  .quad 17
     .quad D
@@ -48,9 +48,9 @@ L:  .quad 56
     .quad M
 M:  .quad 60
     .quad N
-N:  .quad 65
+N:  .quad 70
     .quad O
-O:  .quad 60
+O:  .quad 75
     .quad 0  # Null terminator
 
 head: .quad A
