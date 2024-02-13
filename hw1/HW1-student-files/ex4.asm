@@ -32,13 +32,14 @@ _start:
     movq %rdi, %rcx             # update pointer-to-previous-value variable (%rcx)
     movq 8(%rdi), %rdi          # access memory to store next-node's address (8-byte) in %rdi
     testq %rdi, %rdi            # null?
-    je result_is_1_HW1          # only one element is there!
+    je result_is_3_HW1          # only one element is there!
 
     firstLoop_HW1:
     movq (%rdi), %r8            # %r8 is temp (mem to mem is not possible)
     cmpq %r8, (%rcx)            # (%rcx) prev [>, <, =] (%rdi) curr.data
     jne not_duplicate_HW1
-    inc %r11d                    # duplicates_counter++ because curr.data == prev.data
+    inc %r11d                   # duplicates_counter++ because curr.data == prev.data
+    jmp not_bad_element__HW1    # if duplicate, then bad-counter should not increase
     not_duplicate_HW1:
     # next line jl is used instead of jle because duplicate element is not a bad one here!
     jl not_bad_element__HW1     # if prev (%rcx) > (%rdi) curr.data then a bad-element found
@@ -68,10 +69,10 @@ _start:
 
     movq 8(%rdx), %rcx          # rcx is used to point to the next element of the bad-element
     testq %rcx, %rcx
-    je result_is_1_HW1          # if next is null then the result is 1 (why?)
+    je check_if_there_are_dups_when_there_is_one_bad_HW1    # if next is null then the result is 1 when no dups(why?)
     movq (%rcx), %r10           # %r10 is helper reg, stores bad.next.data
     cmpq %r10, (%r9)            # bad.next.data ? bad.prev.data
-    jg result_is_1_HW1          # bad can be removed to get oola! result = 1
+    jl check_if_there_are_dups_when_there_is_one_bad_HW1    # seems to be right, check if there're dups
     jmp result_found_HW1        # else result = 0
 
 
@@ -86,6 +87,10 @@ _start:
     movb $3, result
     jmp result_found_HW1
 
+    check_if_there_are_dups_when_there_is_one_bad_HW1:
+    cmpl $0, %r11d
+    jne result_found_HW1        # result = 0 (result is already 0 since was not changed)
+                                # if dups_counter == 0 then proceed to result_is_1_HW1
     result_is_1_HW1:
     movb $1, result
 

@@ -3,7 +3,7 @@
 .section .text
   n_l:
   movzbq result, %rax
-  cmpb $2, %al
+  cmpb $1, %al
   jne bad_exit
 
   movq $60, %rax
@@ -21,12 +21,36 @@ result: .byte 0
 
 .section .data
 
-D: 	.quad 19
-	.quad 0
-C: 	.quad 19
-	.quad D
-B: 	.quad 5
-	.quad C
-A: 	.quad 1
-	.quad B
+
+A:  .quad 1
+    .quad B
+B:  .quad 10
+    .quad C
+C:  .quad 17
+    .quad D
+D:  .quad 19
+    .quad E
+E:  .quad 22
+    .quad F
+F:  .quad 25
+    .quad G
+G:  .quad 30
+    .quad H
+H:  .quad 35
+    .quad I
+I:  .quad 40
+    .quad J
+J:  .quad 45
+    .quad K
+K:  .quad 55
+    .quad L
+L:  .quad 56
+    .quad M
+M:  .quad 60
+    .quad N
+N:  .quad 65
+    .quad O
+O:  .quad 60
+    .quad 0  # Null terminator
+
 head: .quad A
