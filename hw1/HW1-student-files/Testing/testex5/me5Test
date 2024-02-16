@@ -1,0 +1,26 @@
+.global _start
+
+.section .text
+
+  mov $integer, %rax
+  cmpl $73, (%rax)
+  jne bad_exit
+  mov $legal, %rax
+  cmpl $1, (%rax)
+  jne bad_exit
+
+
+  movq $60, %rax
+  movq $0, %rdi
+  syscall
+
+bad_exit:
+  movq $60, %rax
+  movq $1, %rdi
+  syscall
+
+
+.section .data
+command: .ascii "movl $0111, $54"
+integer: .long 0
+legal: .byte 0
