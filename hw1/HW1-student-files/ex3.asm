@@ -26,7 +26,7 @@ _start:
     jl  .incLastSmallerThanCurrentIndex
     # in this line arr[i]<inc  %r10>(%rax)
     cmpl (%rax) ,%r11d 
-    jl .setAnswerIsWrong
+    jle .setAnswerIsWrong
     # (%rax) should put be put in dec array
     jmp .insertInDec
 
@@ -52,7 +52,7 @@ _start:
     lea 4(%rax) ,%r10 
     movl (%r10),%r10d # getting the next element in source array arr[i+1]
     cmpl (%rax),%r10d
-    jl .insertInInc
+    jg .insertInInc
     jmp .insertInDec
 
 .insertInDec:
@@ -88,16 +88,36 @@ _start:
     test %r9d,%r9d
     jz .bothAreEmpty
     # in this line inc array is empty but dec ain't
-    movl (%rcx),%r10d
-    cmpl (%rax),%r10d
-    jl .insertInDec   
-    jmp .insertInInc
+    lea -4(%rcx),%r11
+    movl (%r11),%r11d # r11d gets the last value of the dec  value
+    cmpl (%rax),%r11d 
+    jl .insertInInc # dec <arr[i]
+    # in this line dec> arr[i] && arr[i]>inc boefen rek (we can put it in the dec array)
+    # we have to the order of the next element
+    movl %esi, %r12d
+    inc %r12d
+    cmpl (size),%r12d
+    jae .insertInInc # doesn't matter where to put 
+    # we are in a valid boundaries
+    movl (%rax),%r10d
+    # we valdiated that we are in valid boundaries of the source_array
+    lea 4(%rax),%r11
+    movl (%r11),%r11d
+    cmpl %r11d,%r10d
+    jl .insertInInc
+    jmp .insertInDec
 
 .emptyDecArray:
     # inc cannot be empty
-    movl (%rbx),%r10d # set the inc last val in %r10d
-    cmpl (%rax),%r10d 
-    jl .insertInInc 
+    lea -4(%rbx),%r10
+    movl (%r10),%r10d # last inc 
+    cmpl (%rax),%r10d
+    jg .insertInDec
+    # inc < arr[i] check the next element
+    lea 4(%rax),%r11 # get the next element in the source array
+    movl (%r11),%r11d
+    cmpl (%rax),%r11d
+    jg .insertInInc
     jmp .insertInDec
 
 .exit:
