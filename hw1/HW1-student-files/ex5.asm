@@ -294,7 +294,7 @@ _start:
     movzbl %r9b, %r11d              # reset %r11d
     cmpl $10, %r10d                 # decimal in a string to decimal!
     je .decimal_convert_HW1
-    shll %ecx, %r11d                # e.g., %r10 = 4 (hex) => convert number (0-F) in %r11b to decimal from hex
+    shll %cl, %r11d                # e.g., %r10 = 4 (hex) => convert number (0-F) in %r11b to decimal from hex
     addl %r10d, %ecx                # ecx"++" (e.g., in hex, ecx = 0*4, 1*4, 2*4) => here ecx is how much to shift (2 to the power ?)
     jmp .pass_decimal_HW1
 .decimal_convert_HW1:
