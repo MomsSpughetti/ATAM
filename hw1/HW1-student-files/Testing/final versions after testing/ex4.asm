@@ -24,6 +24,7 @@ _start:
     movq $0, %rdx               # %rdx will point to the last bad-element found - used later, when checking if result = 1
     movl $0, %esi               # %esi (4-byte == int) is bad-elements counter
     movq $0, %r9                # %r9 will eventually point to the prev of last bad-elem
+    movq $0, %r8                # used to handle unique cases like: ([7,10,8,9]), here %r8 will eventually point to element 7
     movl $0, %r11d              # %r11d (int size) is used to count duplictaes - used later!
     movb $0, result             # store 0 in result (if result is not changed then 0 is the right value)
     testq %rdi, %rdi
@@ -35,8 +36,8 @@ _start:
     je .result_is_3_HW1          # only one element is there!
 
 .firstLoop_HW1:
-    movq (%rdi), %r8            # %r8 is temp (mem to mem is not possible)
-    cmpq %r8, (%rcx)            # (%rcx) prev [>, <, =] (%rdi) curr.data
+    movq (%rdi), %r10            # %r10 is temp (mem to mem is not possible)
+    cmpq %r10, (%rcx)            # (%rcx) prev [>, <, =] (%rdi) curr.data
     jne .not_duplicate_HW1
     inc %r11d                   # duplicates_counter++ because curr.data == prev.data
     jmp .not_bad_element__HW1    # if duplicate, then bad-counter should not increase
@@ -73,9 +74,8 @@ _start:
     movq (%rcx), %r10           # %r10 is helper reg, stores bad.next.data
     cmpq %r10, (%r9)            # bad.next.data >= bad.prev.data (increasing)
     jle .result_is_1_HW1          # oola! => result = 1
-    cmpq %r9, head(%rip)       # check unique case like in [5, 1, 2 ,3] => [1, 2, 3] is increasing
-    je .handle_unique_case_HW1   #, without this, [5, 2, 3] will be checked, but it is not increasing (1 removed not 5)
-    jmp .result_found_HW1        # else result = 0
+    movq head(%rip), %rdi           # reset pointer to point to the first element
+    jmp .find_prev_of_prev_of_the_bad_element_HW1   #, without this, [5, 2, 3] will be checked, but it is not increasing (1 removed not 5)
 
 
 
@@ -89,12 +89,21 @@ _start:
     movb $3, result
     jmp .result_found_HW1
 
-.handle_unique_case_HW1:
-    movq 8(%rdx), %rcx          # %rcx is pointing to the third node now
-    movq (%rcx), %r11           # %r11 = thirdNode.data
-    cmpq %rcx, (%rdx)           # result = 1 if lastBad.data (%rdx) (2nd node) < lastBad.next.data (%rcx) (3rd node)
-    jg .result_found_HW1         # else result = 0
-                                # if (2nd node) < (3rd node) then proceed to result_is_1_HW1
+.find_prev_of_prev_of_the_bad_element_HW1:
+    cmpq %rdi, %r9              # if the current node is the prev_of_bad node (%r9) then prev_of_prev is already in %r8 => stop loop
+    je .handle_unique_case_HW1
+    movq %rdi, %r8
+    movq 8(%rdi), %rdi
+    jmp .find_prev_of_prev_of_the_bad_element_HW1
+
+
+.handle_unique_case_HW1:        # cases like: [5, 1, 2 ,3] or [7, 10, 8, 9]
+    testq %r8, %r8              # in case prev_of_bad os first node => %r8 is null
+    je .result_is_1_HW1         # 2nd element is the last bad element hence 2nd < 3rd => when removing first element we get increasing array
+    movq (%r8), %r11            # %r11 now has value of prev_of_prev_of_bad
+    cmpq %r11, (%rdx)           # check if the array is increasing when removing prev_of_bad
+    jl .result_found_HW1
+
 .result_is_1_HW1:
     movb $1, result
 
