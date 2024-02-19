@@ -6,7 +6,7 @@ _start:
     movq $vertices,%rax
     movq (%rax),%rax
     test %rax,%rax
-    jz .cyclicGraph
+    jz .exit
     # at this line we have validated that there is no self loops (normalCode)
     movq $vertices,%rax 
     # each of the registers (r8-r15) has the in-degree of the vertics[i] respictevly
