@@ -47,6 +47,7 @@ _start:
     jmp .sort
 
 
+
 .buildInDegreeForRegRbxNodeAdjancets:
     # rbx is an  array of pointers (effective address)
     movq (%rbx),%rcx # get the current node in the adjacents array
@@ -153,7 +154,7 @@ _start:
     cmpq $3, %rsi
     jg .removeOrigin
 .checkR12Origin:
-    test %r8,%r8
+    test %r12,%r12
     jnz .checkR13Origin
     movq $4 , %rdx
     cmpq $4, %rsi
