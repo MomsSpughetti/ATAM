@@ -3,7 +3,7 @@
 .section .text
 
 _start:
-    #your code here
+#your code here
 
     #get the char, rdx is caller-saved reg
     movb character, %dl
