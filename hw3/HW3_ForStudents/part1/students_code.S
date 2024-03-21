@@ -139,6 +139,10 @@ matrix_multiplication:
 	# callee-saved
 	# none
 
+	# check input validity
+	cmpq %r8, %r9
+	jne .bad_exit
+
 	# initialize
 	xor %r10, %r10	# will have q value
 	# plan: use rcx/r9 as the curr row/col
@@ -240,5 +244,14 @@ matrix_multiplication:
 	cmpq $0, %rcx
 	ja .loop1_rows
 
+	movq $1, %rax # finished successfuly
+
+	jmp .exit
+
+	.bad_exit:
+	xor %rax, %rax
+
+	.exit:
 	ret
+
 
