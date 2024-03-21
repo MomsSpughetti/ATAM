@@ -1,0 +1,1 @@
+dot -Tpng file.dot -o map_graph.png

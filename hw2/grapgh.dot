@@ -1,0 +1,37 @@
+digraph {
+    graph [dpi=300, bgcolor=white, ratio=1.0]
+    node [shape=circle, style=filled, fillcolor=lightblue, fontname=Arial, fontsize=14, width=0.3, height=0.3]
+    edge [color=gray, fontname=Arial, fontsize=12]
+
+    A [label="A, 5"]
+    B [label="B, 5"]
+    C [label="C, 5"]
+    D [label="D, 3"]
+    E [label="E, 2"]
+    F [label="F, 1"]
+    G [label="G, 6"]
+    Null1 [label="null", shape=plaintext, fontsize=10]
+    Null2 [label="null", shape=plaintext, fontsize=10]
+    Null3 [label="null", shape=plaintext, fontsize=10]
+    Null4 [label="null", shape=plaintext, fontsize=10]
+    Null5 [label="null", shape=plaintext, fontsize=10]
+    Null6 [label="null", shape=plaintext, fontsize=10]
+    Null7 [label="null", shape=plaintext, fontsize=10]
+    Null8 [label="null", shape=plaintext, fontsize=10]
+
+    A -> B
+    A -> C
+    B -> D
+    B -> E
+    C -> Null1 [color=red, style=dotted]
+    C -> G
+    D -> Null2 [color=red, style=dotted]
+    D -> Null3 [color=red, style=dotted]
+    E -> Null4 [color=red, style=dotted]
+    E -> F
+    F -> Null5 [color=red, style=dotted]
+    F -> Null6 [color=red, style=dotted]
+    G -> Null7 [color=red, style=dotted]
+    G -> Null8 [color=red, style=dotted]
+}
+
